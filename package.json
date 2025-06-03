@@ -1,0 +1,29 @@
+{
+  "name": "second-brain",
+  "version": "1.0.0",
+  "description": "This is an application where we store important links,blogs,repo which have to be remembered later.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maaz1604/Second-Brain.git"
+  },
+  "author": "Maaz Amir",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maaz1604/Second-Brain/issues"
+  },
+  "homepage": "https://github.com/maaz1604/Second-Brain#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/mongoose": "^5.11.96",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.1"
+  }
+}
