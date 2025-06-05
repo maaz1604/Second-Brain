@@ -15,8 +15,8 @@ app.use(cors());
 
 // Route 1: user signup
 app.post("/api/v1/signup", async (req, res) => {
-    // TODO: Use zod or a similar library for input validation.
-    // TODO: Hash the password before storing it in the database.
+    // TOdO: Use zod or a similar library for input validation.
+    // TOdO: Hash the password before storing it in the database.
     const username = req.body.username;
     const password = req.body.password;
 
