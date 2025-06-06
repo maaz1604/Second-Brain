@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import { ContentModel, UserModel } from './db';
+import { ContentModel, LinkModel, UserModel } from './db';
 import cors from 'cors';
 import { JWT_SECRET } from './config';
 import { userMiddleware } from './middleware';
+import { random } from './util';
 
 const app = express();
 app.use(express.json());
@@ -65,11 +66,13 @@ app.post("/api/v1/signin", async (req, res) => {
 app.post("/api/v1/content", userMiddleware, async (req, res) => {
     const link = req.body.link;
     const type = req.body.type;
+
+    // Create a new content entry linked to the logged-in user.
     await ContentModel.create({
         link: link,
         type: type,
         //@ts-ignore
-        userID: req.userID,
+        userID: req.userID,   // userId is added by the middleware.
         tags: []
     })
 
@@ -82,6 +85,12 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
     //@ts-ignore
     const userID = req.userID;
+    // Fetch all content associated with the user ID and populate username
+    // The `populate` function is used to include additional details from the referenced `userId`.
+    // For example, it will fetch the username linked to the userId.
+    // Since we specified "username", only the username will be included in the result, 
+    // and other details like password won’t be fetched.
+
     const content = await ContentModel.find({
         userID: userID
     }).populate("userID", "username");
@@ -109,12 +118,72 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
 });
 
 // Route 6: Share Content Link
-app.post("/api/v1/brain/share", (req, res) => {
+app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
+    const share = req.body.share;
+
+    if (share) {
+
+        const existingLink = await LinkModel.findOne({
+            //@ts-ignore
+            userId: req.userID
+        });
+
+        if (existingLink) {
+            res.json({
+                hash: existingLink.hash
+            });  // Send existing hash if found
+            return;
+        }
+
+        // Generate a new hash for the shareable link.
+        const hash = random(15);
+        await LinkModel.create({
+            //@ts-ignore
+            userId: req.userID,
+            hash: hash
+        });
+        res.json({ hash });
+    } else {
+        // Remove the shareable link if share is false.
+        await LinkModel.deleteOne({
+            //@ts-ignore
+            userId: req.userId
+        });
+        res.json({ message: "Removed link" });
+    }
 
 });
 
 // Route 7: Get Shared Content
-app.get("/api/v1/brain/:shareLink", (req, res) => {
+app.get("/api/v1/brain/:shareLink", async (req, res) => {
+
+    const hash = req.params.shareLink;
+
+    // Find the link using the provided hash.
+    const link = await LinkModel.findOne({
+        hash:hash
+    });
+
+    if (!hash) {
+        res.status(404).json({
+            message:"Invalid Share Link"
+        });
+        return;
+    }
+
+     // Fetch content and user details for the shareable link.
+    const content = await ContentModel.find({ userId:link?.userId });
+    const user = await UserModel.findOne({ _id: link?.userId });
+
+    if (!user) {
+        res.status(404).json({ message: "User not found" }); // Handle missing user case.
+        return;
+    }
+
+    res.json({
+        username:user.username,
+        content:content
+    });
 
 });
 
