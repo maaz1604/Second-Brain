@@ -161,19 +161,25 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
 
     // Find the link using the provided hash.
     const link = await LinkModel.findOne({
-        hash:hash
+        hash: hash
     });
 
-    if (!hash) {
+    if (!link) {
         res.status(404).json({
-            message:"Invalid Share Link"
+            message: "Invalid Share Link"
         });
         return;
     }
 
-     // Fetch content and user details for the shareable link.
-    const content = await ContentModel.find({ userId:link?.userId });
-    const user = await UserModel.findOne({ _id: link?.userId });
+    // Fetch content and user details for the shareable link.
+    const content = await ContentModel.find({
+        userID:link.userId
+    });
+    console.log(content);
+    
+    const user = await UserModel.findOne({
+        _id: link.userId
+    });
 
     if (!user) {
         res.status(404).json({ message: "User not found" }); // Handle missing user case.
@@ -181,8 +187,8 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
     }
 
     res.json({
-        username:user.username,
-        content:content
+        username: user.username,
+        content
     });
 
 });
