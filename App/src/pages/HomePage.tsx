@@ -21,8 +21,8 @@ const HomePage = () => {
   const [ytData, setYTData] = useState<any[]>([]);
   const [notionData, setNitionData] = useState<any[]>([]);
   // const [twData, setTWData] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [shareData, setShareData] = useState<any[]>([]);
+  
+  const [, setShareData] = useState<any[]>([]);
   const [dataShow, setDataShow] = useState("All");
   let show: JSX.Element | JSX.Element[] = data1;
 

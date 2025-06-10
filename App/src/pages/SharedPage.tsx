@@ -4,7 +4,6 @@ import Card from "../components/CardUi/Card";
 import { useEffect, useState } from "react";
 
 const SharedPage = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id } = useParams();
   const location = useLocation();
   const [sharedData, setSharedData] = useState<any[]>([]);
@@ -26,7 +25,7 @@ const SharedPage = () => {
         }
       }
     }
-  }, [location]);
+  }, [location,id]);
 
   return (
     <div className="bg-slate-200 w-full min-h-screen">
