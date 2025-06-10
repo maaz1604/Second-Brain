@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import LogoutIcon from "../components/icons/LogoutIcon";
 
 
-const url = "http://localhost:5000";
+const url = "https://second-brain-backend-w7s3.onrender.com";
 
 const HomePage = () => {
   const navigate = useNavigate();

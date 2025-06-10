@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const url = "http://localhost:5000";
+const url ="https://second-brain-backend-w7s3.onrender.com";
 
 const Modal = (props: {onClick: () => void,setModal: (value: boolean) => void, setReloadData: ()=> void}) => {
 
