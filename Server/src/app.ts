@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
 dotenv.config();
 app.use(cors({
-  origin: process.env.Origin, 
+  origin: "https://brainly-ysct.onrender.com", 
   credentials: true 
 }));
 // //   origin: '*', 
